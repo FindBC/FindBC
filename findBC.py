@@ -10,8 +10,6 @@ import getopt
 import sys
 import scipy.optimize
 
-# Daniel
-
 # conditional print
 def print_debug(m):
     if Info: print m
@@ -174,7 +172,7 @@ def usage():
     print "-h, --help Print this message"
     print "-v, --verbose Print debug information"
     print "--ext exetension"
-	
+
 
 def BCs(argv):
 
@@ -377,7 +375,7 @@ def BCs(argv):
     output = np.array(output)
     if len(default_extension.split(".")) > 1:
         default_extension = default_extension.split(".")[1]
-		
+
     np.savetxt(default_ouput+"."+default_extension, output, delimiter=",")
 
     fig = plt.figure()
