@@ -376,7 +376,7 @@ def BCs(argv):
     if len(default_extension.split(".")) > 1:
         default_extension = default_extension.split(".")[1]
 
-    np.savetxt(default_ouput+"."+default_extension, output, delimiter=",")
+    np.savetxt(default_ouput+"."+default_extension, output, fmt='%f %f %f %f %f %f %f %f %f %f %f', delimiter=",")
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
