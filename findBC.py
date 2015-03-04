@@ -10,8 +10,7 @@ import getopt
 import sys
 import scipy.optimize
 
-
-# Test
+# Daniel
 
 # conditional print
 def print_debug(m):
