@@ -173,6 +173,8 @@ def usage():
     print "-o, --output \tOutpu file name"
     print "-h, --help Print this message"
     print "-v, --verbose Print debug information"
+    print "--ext exetension"
+	
 
 def BCs(argv):
 
@@ -223,6 +225,7 @@ def BCs(argv):
     use_as_lib = False
     default_ouput = "SimulationBC"
     default_material = True
+    default_extension = "txt"
 
     # Read input arguments
     try:
@@ -251,6 +254,8 @@ def BCs(argv):
             set_goals[o.split("--")[1]+"_wanted"] = True
         elif o in ("--t0", "--tf", "--dt"):
             times_data[o.split("--")[1]]=float(a)
+        elif o in ("--ext"):
+            default_extension = a
         else:
             print "Option %s unhandled (ignored)!!" %o
 
@@ -370,7 +375,10 @@ def BCs(argv):
             break
 
     output = np.array(output)
-    np.savetxt(default_ouput+".csv", output, delimiter=",")
+    if len(default_extension.split(".")) > 1:
+        default_extension = default_extension.split(".")[1]
+		
+    np.savetxt(default_ouput+"."+default_extension, output, delimiter=",")
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
