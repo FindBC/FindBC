@@ -15,8 +15,9 @@ def print_debug(m):
     if Info: print m
 
 # Computation of equivalent stress
-def equivalentStress(deviatoricStress):
-    return sqrt((deviatoricStress[0])**2+(deviatoricStress[1])**2+(deviatoricStress[2])**2)*sqrt(3./2.)
+def equivalentStress(Stress):
+    spherical_part = 1./3.*np.sum(Stress)
+    return sqrt((Stress[0]-spherical_part)**2+(Stress[1]-spherical_part)**2+(Stress[2]-spherical_part)**2)*sqrt(3./2.)
 
 # Computation of equivalent Strain
 def equivalentStrain(e):
@@ -301,15 +302,25 @@ def BCs(argv):
     params= {'previous_solution': (-0.5*e3_wanted, -0.5*e3_wanted, A*e3_wanted)} #e1, e2, s3
 
     time_step = times_data["dt"]
-    times = np.linspace(times_data["t0"], times_data["tf"], int((times_data["tf"] -times_data["t0"])/times_data["dt"])+1, endpoint=True)
+    time_final = times_data["tf"]
+    time_initial = times_data["t0"]
+    dt0 = time_step/10
+    Constant = 1./(3.*(time_final-time_initial-dt0))
+    s_param = np.linspace(0., 1., int((times_data["tf"] -times_data["t0"])/times_data["dt"])+1, endpoint=True)
+    times = np.zeros_like(s_param)
+    for i, count in zip(s_param, range(len(s_param))):
+        times[count]= time_initial + dt0 * i + i ** 3 /(3.*Constant)
+
 #    times = [0.]
 
     eb = 0.
     epb = 0.
     output = []
-    for time in times:
+    for time, count in zip(times,range(len(times))) :
 
-        eb += epb * time_step
+        if count:
+            eb += epb * (time-times[count-1])
+
         A = computeA(K0, Temp, m1, n, eb_0, m, m4, eb)
         print_debug(A)
 
@@ -378,17 +389,28 @@ def BCs(argv):
 
     np.savetxt(default_ouput+"."+default_extension, output, fmt='%f %f %f %f %f %f %f %f %f %f %f', delimiter=",")
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.plot(output[:,0], output[:,6],'.-', label='\sigma_1')
-    ax.plot(output[:,0], output[:,7],'.-', label='\sigma_2')
-    ax.legend(loc='lower right')
-    ax.set_xlabel('$\mathrm{time (s)}$')
-    ax.set_ylabel('$\mathrm{Stress}$')
-
     if use_as_lib:
-        return fig
+        data_output = {}
+        data_output['time'] = output[:,0]
+        data_output['eb'] = output[:,1]
+        data_output['epb'] = output[:,2]
+        data_output['e0'] = output[:,3]
+        data_output['e1'] = output[:,4]
+        data_output['e2'] = output[:,5]
+        data_output['s0'] = output[:,6]
+        data_output['s1'] = output[:,7]
+        data_output['s2'] = output[:,8]
+        data_output['triaxiality'] = output[:,9]
+        data_output['lodeAngle'] = output[:,10]
+        return data_output
     else:
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.plot(output[:,0], output[:,6],'.-', label='\sigma_1')
+        ax.plot(output[:,0], output[:,7],'.-', label='\sigma_2')
+        ax.legend(loc='lower right')
+        ax.set_xlabel('$\mathrm{time (s)}$')
+        ax.set_ylabel('$\mathrm{Stress}$')
         plt.show()
         return
 
