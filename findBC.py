@@ -44,7 +44,7 @@ def lodeAngle(s):
 def deviatoricStressComponent(e, params, comp=-1):
     A = params['A']
     m = params['m']
-    s = np.array([ A*(sqrt(3.)*equivalentStrain(e))**(m-1.) * e[i] for i in range(len(e)) ])
+    s = np.array([ A * 2./3. * equivalentStrain(e)**(m-1.) * e[i] for i in range(len(e)) ])
     if comp == -1:
         return s
     else:
