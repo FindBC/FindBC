@@ -228,7 +228,7 @@ def BCs(argv):
 
     # Read input arguments
     try:
-        opts, args = getopt.getopt(argv[1:], 'lhvo:', ["K0=", "Temp=", "m1=", "n=", "eb_0=", "m=", "m4=", "help", "verbose", "output=", "Tx=", "mu=", "e3=", "t0=", "tf=", "dt=", "lib"])
+        opts, args = getopt.getopt(argv[1:], 'lhvo:', ["K0=", "Temp=", "m1=", "n=", "eb_0=", "m=", "m4=", "help", "verbose", "output=", "Tx=", "mu=", "e3=", "t0=", "tf=", "dt=", "lib", "ext="])
     except getopt.GetoptError as err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -304,7 +304,7 @@ def BCs(argv):
     time_step = times_data["dt"]
     time_final = times_data["tf"]
     time_initial = times_data["t0"]
-    dt0 = time_step/3.
+    dt0 = time_step/10.
     exp_m = 2.
     Constant = 1./((exp_m+1.)*(time_final-time_initial-dt0))
     s_param = np.linspace(0., 1., int((times_data["tf"] -times_data["t0"])/times_data["dt"])+1, endpoint=True)
@@ -377,8 +377,10 @@ def BCs(argv):
         print ('Time: ', time)
 #        print ('pressure obtained: ',pressure, ' computed pressure: ', computePressure(s), ' error (%) : ', 100.*(pressure-computePressure(s))/computePressure(s))
         print ('volume change: ', np.sum(e))
+        print s
         if(abs((triaxiality(s)-Tx_wanted)/Tx_wanted)+abs((lodeAngle(s)-mu_wanted)/(mu_wanted+(mu_wanted==0)*1.))+abs(np.sum(e)) < 1e-4):
             print("\n**** BC FOUND!! ****\n")
+            print s
             output.append([time, eb, epb, e[0], e[1], e[2], s[0], s[1], s[2], triaxiality(s), lodeAngle(s)])
         else:
             print("\n!!!! SAD DAY !!!!\n")
@@ -388,7 +390,7 @@ def BCs(argv):
     if len(default_extension.split(".")) > 1:
         default_extension = default_extension.split(".")[1]
 
-    np.savetxt(default_ouput+"."+default_extension, output, fmt='%f %f %f %f %f %f %f %f %f %f %f', delimiter=",")
+    np.savetxt(default_ouput+"."+default_extension, output, fmt='%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f', delimiter=",")
 
     if use_as_lib:
         data_output = {}
