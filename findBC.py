@@ -304,12 +304,13 @@ def BCs(argv):
     time_step = times_data["dt"]
     time_final = times_data["tf"]
     time_initial = times_data["t0"]
-    dt0 = time_step/10
-    Constant = 1./(3.*(time_final-time_initial-dt0))
+    dt0 = time_step/3.
+    exp_m = 2.
+    Constant = 1./((exp_m+1.)*(time_final-time_initial-dt0))
     s_param = np.linspace(0., 1., int((times_data["tf"] -times_data["t0"])/times_data["dt"])+1, endpoint=True)
     times = np.zeros_like(s_param)
     for i, count in zip(s_param, range(len(s_param))):
-        times[count]= time_initial + dt0 * i + i ** 3 /(3.*Constant)
+        times[count]= time_initial + dt0 * i + i ** (exp_m+1.) /((exp_m+1.)*Constant)
 
 #    times = [0.]
 
