@@ -151,7 +151,6 @@ def findSimulationBC(vector, *params):
         return ((tx-triaxiality(s))**2. + (mu-lodeAngle(s))**2.)**0.5
 
 
-
 #Penalty on volume for Static Solution (imposing by penaty volume conservation)
 def volumeConservationStress(e):
     return Penalty_stress*np.sum(e)
@@ -173,6 +172,7 @@ def usage():
     print "-h, --help Print this message"
     print "-v, --verbose Print debug information"
     print "--ext exetension"
+    print "--lib or -l Use the function as a library, returns a dictionary containing: [time, eb, epb, e[0], e[1], e[2], s[0], s[1], s[2], triaxiality, lodeAngle] "
 
 
 def BCs(argv):
