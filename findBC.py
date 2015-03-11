@@ -390,7 +390,7 @@ def BCs(argv):
     if len(default_extension.split(".")) > 1:
         default_extension = default_extension.split(".")[1]
 
-    np.savetxt(default_ouput+"."+default_extension, output, fmt='%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f', delimiter=",")
+    np.savetxt(default_ouput+"."+default_extension, output, fmt='%f %f %f %f %f %f %f %f %f %f %f', delimiter=",")
 
     if use_as_lib:
         data_output = {}
