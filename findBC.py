@@ -372,13 +372,13 @@ def BCs(argv):
         print  ' *********************'
 
         print ('Verification goals: ')
-        print ('Wanted Tx: ', Tx_wanted, ', obtained Tx: ', triaxiality(s), ' error (%) : ', 100.*(triaxiality(s)-Tx_wanted)/Tx_wanted )
+        print ('Wanted Tx: ', Tx_wanted, ', obtained Tx: ', triaxiality(s), ' error (%) : ', 100.*(triaxiality(s)-Tx_wanted)/(Tx_wanted +(Tx_wanted==0)*1.))
         print ('Wanted mu: ', mu_wanted, ', obtained mu: ', lodeAngle(s), ' error (%) : ', 100.*(lodeAngle(s)-mu_wanted)/(mu_wanted+(mu_wanted==0)*1.) )
         print ('Time: ', time)
 #        print ('pressure obtained: ',pressure, ' computed pressure: ', computePressure(s), ' error (%) : ', 100.*(pressure-computePressure(s))/computePressure(s))
         print ('volume change: ', np.sum(e))
         print s
-        if(abs((triaxiality(s)-Tx_wanted)/Tx_wanted)+abs((lodeAngle(s)-mu_wanted)/(mu_wanted+(mu_wanted==0)*1.))+abs(np.sum(e)) < 1e-4):
+        if(abs((triaxiality(s)-Tx_wanted)/(Tx_wanted +(Tx_wanted==0)*1.))+abs((lodeAngle(s)-mu_wanted)/(mu_wanted+(mu_wanted==0)*1.))+abs(np.sum(e)) < 1e-4):
             print("\n**** BC FOUND!! ****\n")
             print s
             output.append([time, eb, epb, e[0], e[1], e[2], s[0], s[1], s[2], triaxiality(s), lodeAngle(s)])
@@ -390,7 +390,7 @@ def BCs(argv):
     if len(default_extension.split(".")) > 1:
         default_extension = default_extension.split(".")[1]
 
-    np.savetxt(default_ouput+"."+default_extension, output, fmt='%f %f %f %f %f %f %f %f %f %f %f', delimiter=",")
+    np.savetxt(default_ouput+"."+default_extension, output, fmt='%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f', delimiter=",")
 
     if use_as_lib:
         data_output = {}
